@@ -1,10 +1,69 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Wissenschaft & Zukunft";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!-- 1. HOME / HERO SEKTION -->
+<section id="home" class="section-padding hero-section">
+    <div class="hero-content">
+        <h1>Forschung für das Leben</h1>
+        <p class="subtitle">Das Stammzellen-Projekt: Sachlich fundierte Einblicke in die regenerative Medizin von morgen.</p>
+        <a href="#ueber-uns" class="btn-primary">Mehr erfahren</a>
+    </div>
+</section>
+
+<!-- 2. ÜBER UNS SEKTION -->
+<section id="ueber-uns" class="section-padding text-section">
+    <h2>Über uns</h2>
+    <div class="grid-two-columns">
+        <div>
+            <h3>Unsere Mission</h3>
+            <p>Wir widmen uns der verständlichen und wissenschaftlich fundierten Aufbereitung von Informationen rund um das Thema Stammzellenforschung. Unser Ziel ist es, Vorurteile abzubauen und über das immense Potenzial der regenerativen Medizin aufzuklären.</p>
+        </div>
+        <div>
+            <h3>Was sind Stammzellen?</h3>
+            <p>Stammzellen sind die Bausteine des Lebens. Sie besitzen die einzigartige Fähigkeit, sich in verschiedene Zelltypen (wie Muskel-, Nerven- oder Blutzellen) zu verwandeln. Diese Eigenschaft macht sie zum Hoffnungsträger für die Heilung bisher unheilbarer Krankheiten.</p>
+        </div>
+    </div>
+</section>
+
+<!-- 3. KONTAKT SEKTION -->
+<section id="kontakt" class="section-padding text-section">
+    <h2>Kontakt</h2>
+    <p>Haben Sie Fragen, Anregungen oder wissenschaftliche Beiträge? Nutzen Sie unser Kontaktformular.</p>
+
+    <form class="contact-form" method="post">
+        <div class="form-group">
+            <label for="name">Name / Institution</label>
+            <input type="text" id="name" name="name" required placeholder="Ihr Name">
+        </div>
+        <div class="form-group">
+            <label for="email">E-Mail-Adresse</label>
+            <input type="email" id="email" name="email" required placeholder="ihre.mail@beispiel.de">
+        </div>
+        <div class="form-group">
+            <label for="nachricht">Ihre Nachricht</label>
+            <textarea id="nachricht" name="nachricht" rows="5" required placeholder="Wie können wir Ihnen helfen?"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Nachricht senden</button>
+    </form>
+</section>
+
+<!-- 4. IMPRESSUM SEKTION -->
+<section id="impressum" class="section-padding legal-section">
+    <h2>Impressum</h2>
+    <p><strong>Angaben gemäß § 5 TMG:</strong></p>
+    <p>Stammzellen Forschungsprojekt e.V.<br>Musterstraße 42<br>12345 Musterstadt</p>
+    <p><strong>Vertreten durch:</strong><br>Dr. med. Max Mustermann</p>
+    <p><strong>Kontakt:</strong><br>Telefon: +49 (0) 123 456789<br>E-Mail: info@stammzellen-projekt.de</p>
+</section>
+
+<!-- 5. DSGVO SEKTION -->
+<section id="dsgvo" class="section-padding legal-section">
+    <h2>Datenschutzerklärung (DSGVO)</h2>
+    <h3>1. Datenschutz auf einen Blick</h3>
+    <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend den gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.</p>
+    <h3>2. Datenerfassung auf unserer Website</h3>
+    <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z. B. um Daten handeln, die Sie in ein Kontaktformular eingeben. Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst (z. B. Internetbrowser, Betriebssystem oder Uhrzeit des Seitenaufrufs).</p>
+</section>
