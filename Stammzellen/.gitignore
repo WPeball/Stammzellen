@@ -1,0 +1,6 @@
+# Ignoriere die lokale SQLite Datenbank beim Hochladen (optional, falls du sie lokal halten willst)
+# zellen.db
+# zellen.db-journal
+
+# Ignoriere sensible Konfigurationen im echten Betrieb
+# appsettings.Development.json
