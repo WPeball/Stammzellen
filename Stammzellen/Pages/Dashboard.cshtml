@@ -1,0 +1,97 @@
+﻿@page
+@model Stammzellen.Pages.DashboardModel
+@{
+    ViewData["Title"] = "Labor-Dashboard";
+}
+
+<div class="blog-header">
+    <h1>Labor-Dashboard</h1>
+    <p>Verwaltung und Registrierung von Stammzellen-Proben</p>
+</div>
+
+<div class="grid-two-columns">
+    <!-- Linke Spalte: Formular zum Eintragen -->
+    <div class="section-padding">
+        <h2>Neue Probe registrieren</h2>
+
+        <form method="post" class="minimal-form">
+            <div asp-validation-summary="ModelOnly" class="alert-info" style="color: red; border-left-color: red;"></div>
+
+            <div class="form-group">
+                <label asp-for="NewSample.CellType"></label>
+                <input asp-for="NewSample.CellType" placeholder="z. B. iPSC, MSC, Embryonal" />
+                <span asp-validation-for="NewSample.CellType" style="color: red; font-size: 0.85rem;"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewSample.BatchNumber"></label>
+                <input asp-for="NewSample.BatchNumber" placeholder="z. B. BATCH-2026-09" />
+                <span asp-validation-for="NewSample.BatchNumber" style="color: red; font-size: 0.85rem;"></span>
+            </div>
+
+            <div class="form-group-inline" style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex: 1;">
+                    <label asp-for="NewSample.ViabilityPercentage"></label>
+                    <input asp-for="NewSample.ViabilityPercentage" type="number" step="0.1" value="95.0" />
+                    <span asp-validation-for="NewSample.ViabilityPercentage" style="color: red; font-size: 0.85rem;"></span>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label asp-for="NewSample.CellCountMillions"></label>
+                    <input asp-for="NewSample.CellCountMillions" type="number" step="0.01" value="5.0" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewSample.StorageLocation"></label>
+                <input asp-for="NewSample.StorageLocation" placeholder="z. B. Kryo-Tank Alpha, Box 4" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NewSample.Notes"></label>
+                <textarea asp-for="NewSample.Notes" rows="3" placeholder="Besondere Vorkommnisse..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Probe speichern</button>
+        </form>
+    </div>
+
+    <!-- Rechte Spalte: Bestand / Tabelle -->
+    <div class="section-padding" style="overflow-x: auto;">
+        <h2>Aktueller Probenbestand</h2>
+
+        @if (!Model.StemCellSamples.Any())
+        {
+            <div class="alert-info">
+                <p>Es sind noch keine Stammzellen-Proben in der Datenbank registriert.</p>
+            </div>
+        }
+        else
+        {
+            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; color: var(--text-color);">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                        <th style="padding: 0.5rem;">Zelltyp</th>
+                        <th style="padding: 0.5rem;">Charge</th>
+                        <th style="padding: 0.5rem;">Vitalität</th>
+                        <th style="padding: 0.5rem;">Menge</th>
+                        <th style="padding: 0.5rem;">Ort</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sample in Model.StemCellSamples)
+                    {
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 0.75rem 0.5rem; font-weight: 600; color: var(--primary-color);">@sample.CellType</td>
+                            <td style="padding: 0.75rem 0.5rem;">@sample.BatchNumber</td>
+                            <td style="padding: 0.75rem 0.5rem;">
+                                <span class="date-badge" style="font-weight: bold;">@sample.ViabilityPercentage%</span>
+                            </td>
+                            <td style="padding: 0.75rem 0.5rem;">@sample.CellCountMillions Mio.</td>
+                            <td style="padding: 0.75rem 0.5rem; font-size: 0.9rem;">@sample.StorageLocation</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>

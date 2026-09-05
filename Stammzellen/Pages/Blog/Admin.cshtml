@@ -1,0 +1,223 @@
+﻿@page
+@model Stammzellen.Pages.Blog.AdminModel
+@{
+    ViewData["Title"] = "Labor-Zentrale Admin";
+}
+
+<div class="blog-header" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 2rem;">
+    <div>
+        <h1>Labor-Blog Administration</h1>
+        <p>Zentrale Verwaltung für Artikel, Autoren und Kommentare</p>
+    </div>
+    <form method="post" asp-page-handler="Logout" style="margin: 0;">
+        <button type="submit" class="btn-reset" style="background-color: #ef4444; color: white; cursor: pointer; padding: 0.5rem 1rem; border-radius: 4px; border: none; font-weight: 600;">Abmelden</button>
+    </form>
+</div>
+
+<div class="main-content">
+
+    @if (TempData["AdminMessage"] != null)
+    {
+        <div class="alert-info" style="margin-bottom: 2rem; background-color: rgba(16, 185, 129, 0.1); border-left-color: #10b981; padding: 1rem; border-radius: 4px; color: var(--text-color);">
+            <p><strong>System-Hinweis:</strong> @TempData["AdminMessage"]</p>
+        </div>
+    }
+
+    <!-- 1. ADMIN FILTER-BAR (NACH DATUM & AUTOR) -->
+    <div class="section-padding filter-section" style="margin-bottom: 2rem;">
+        <h2>Beiträge filtern (Admin-Ansicht)</h2>
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <label for="FilterAutor">Nach Autor:</label>
+                <input type="text" asp-for="FilterAutor" placeholder="Name des Forschers..." />
+            </div>
+            <div class="filter-group">
+                <label for="FilterDatum">Nach Datum:</label>
+                <input type="date" asp-for="FilterDatum" />
+            </div>
+            <div class="filter-buttons">
+                <button type="submit" class="btn-submit" style="padding: 0.6rem 1.5rem;">Suchen</button>
+                <a href="/Blog/Admin" class="btn-reset">Filter zurücksetzen</a>
+            </div>
+        </form>
+    </div>
+
+    <div style="margin-bottom: 2rem;">
+        <a href="/Blog/Create" class="btn-primary" style="background-color: var(--primary-color); color: white;">➕ Neuen Fachbeitrag verfassen</a>
+    </div>
+
+    <!-- SEKTION 1: BEITRÄGE VERWALTEN (MIT LINE-ALIGNMENT) -->
+    <div class="section-padding" style="margin-bottom: 3rem; overflow-x: auto;">
+        <h2>Veröffentlichte Beiträge (Max. 5 pro Seite)</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; color: var(--text-color);">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                    <th style="padding: 0.5rem;">Titel</th>
+                    <th style="padding: 0.5rem;">Autor</th>
+                    <th style="padding: 0.5rem;">Datum</th>
+                    <th style="padding: 0.5rem; text-align: right;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var post in Model.AlleBeiträge)
+                {
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 0.75rem 0.5rem; font-weight: 600;">@post.Titel</td>
+                        <td style="padding: 0.75rem 0.5rem;"><span class="date-badge">👤 @post.Autor</span></td>
+                        <td style="padding: 0.75rem 0.5rem; font-size: 0.9rem;">@post.ErstelltAm.ToString("dd.MM.yyyy")</td>
+                        <td style="padding: 0.75rem 0.5rem; text-align: right;">
+                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; align-items: center;">
+                                <a href="/Blog/Edit?id=@post.Id" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; background-color: var(--secondary-color); color: white; margin: 0; white-space: nowrap; border-radius: 4px; border: none; font-weight: 600;">✏ Bearbeiten</a>
+                                <form method="post" asp-page-handler="DeletePost" asp-route-id="@post.Id" onsubmit="return confirm('Beitrag und ALLE Kommentare unwiderruflich löschen?');" style="margin: 0; display: inline-block;">
+                                    <button type="submit" style="background-color: #ef4444; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">Löschen</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- BLÄTTER-NAVIGATION FÜR ADMIN-BEITRÄGE (5 STÜCK) -->
+        @if (Model.GesamtSeiten > 1)
+        {
+            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                @if (Model.AktuelleSeite > 1)
+                {
+                    <a href="/Blog/Admin?AktuelleSeite=@(Model.AktuelleSeite - 1)&FilterAutor=@Model.FilterAutor&FilterDatum=@Model.FilterDatum" class="scroll-to-top" style="transform: none; padding: 0.3rem 0.7rem; font-size: 0.85rem;">&larr; Zurück</a>
+                }
+                <span style="color: var(--text-color); font-size: 0.9rem; font-weight: 600;">Seite @Model.AktuelleSeite von @Model.GesamtSeiten</span>
+                @if (Model.AktuelleSeite < Model.GesamtSeiten)
+                {
+                    <a href="/Blog/Admin?AktuelleSeite=@(Model.AktuelleSeite + 1)&FilterAutor=@Model.FilterAutor&FilterDatum=@Model.FilterDatum" class="scroll-to-top" style="transform: none; padding: 0.3rem 0.7rem; font-size: 0.85rem;">Weiter &rarr;</a>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- SEKTION 2: KOMMENTARE MODERIEREN (BLÄTTERBAR & EDITIERBAR) -->
+    <div class="section-padding" style="margin-bottom: 3rem; overflow-x: auto;">
+        <h2>Kommentar-Moderation (Max. 10 pro Seite)</h2>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; color: var(--text-color);">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                    <th style="padding: 0.5rem; width: 20%;">Verfasser / Bezug</th>
+                    <th style="padding: 0.5rem; width: 45%;">Kommentar</th>
+                    <th style="padding: 0.5rem; width: 15%;">Status</th>
+                    <th style="padding: 0.5rem; text-align: right; width: 20%;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var kommentar in Model.AlleKommentare)
+                {
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 0.75rem 0.5rem;">
+                            <strong>@kommentar.Pseudonym</strong><br />
+                            <small style="opacity: 0.6; display: block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                zu: "@kommentar.BlogPost?.Titel"
+                            </small>
+                        </td>
+
+                        <!-- INLINE-EDITIEREN LOGIK -->
+                        <td style="padding: 0.75rem 0.5rem; font-size: 0.95rem;">
+                            @if (Model.EditKommentarId == kommentar.Id)
+                            {
+                                <!-- Editier-Modus: Zeige Textarea und Speicher-Button -->
+                                <form method="post" asp-page-handler="SaveComment" asp-route-id="@kommentar.Id" style="margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                                    <textarea asp-for="EditKommentarText" rows="2" style="width: 100%; padding: 0.4rem; font-family: inherit; border: 1px solid var(--secondary-color); border-radius: 4px; background-color: var(--bg-white); color: var(--text-color);"></textarea>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <button type="submit" style="background-color: #10b981; color: white; border: none; padding: 0.2rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">Speichern</button>
+                                        <a href="/Blog/Admin?AktuelleSeite=@Model.AktuelleSeite&KommentarSeite=@Model.KommentarSeite&FilterAutor=@Model.FilterAutor&FilterDatum=@Model.FilterDatum" style="background-color: var(--border-color); color: var(--text-color); padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; text-decoration: none;">Abbrechen</a>
+                                    </div>
+                                </form>
+                            }
+                            else
+                            {
+                                <!-- Normaler Lese-Modus -->
+                                @kommentar.Text
+                            }
+                        </td>
+
+                        <td style="padding: 0.75rem 0.5rem;">
+                            @if (kommentar.IstFreigegeben)
+                            {
+                                <span style="color: #10b981; font-weight: bold; white-space: nowrap;">🟢 Sichtbar</span>
+                            }
+                            else
+                            {
+                                <span style="color: #ef4444; font-weight: bold; white-space: nowrap;">🔴 Deaktiviert</span>
+                            }
+                        </td>
+
+                        <!-- OPTIMIERT: Alle Buttons sauber in einer Zeile (Flexbox) -->
+                        <td style="padding: 0.75rem 0.5rem; text-align: right;">
+                            <div style="display: flex; gap: 0.4rem; justify-content: flex-end; align-items: center;">
+                                @if (Model.EditKommentarId != kommentar.Id)
+                                {
+                                    <a href="/Blog/Admin?AktuelleSeite=@Model.AktuelleSeite&KommentarSeite=@Model.KommentarSeite&FilterAutor=@Model.FilterAutor&FilterDatum=@Model.FilterDatum&EditKommentarId=@kommentar.Id" style="background-color: var(--secondary-color); color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; text-decoration: none; white-space: nowrap;">✏ Ändern</a>
+                                }
+                                <form method="post" asp-page-handler="ToggleComment" asp-route-id="@kommentar.Id" style="margin: 0;">
+                                    <button type="submit" style="background-color: var(--primary-color); color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
+                                        @(kommentar.IstFreigegeben ? "Sperren" : "Freigeben")
+                                    </button>
+                                </form>
+                                <form method="post" asp-page-handler="DeleteComment" asp-route-id="@kommentar.Id" onsubmit="return confirm('Kommentar löschen?');" style="margin: 0;">
+                                    <button type="submit" style="background-color: #ef4444; color: white; border: none; padding: 0.4rem 0.6rem; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: 600; white-space: nowrap;">Löschen</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <!-- BLÄTTER-NAVIGATION FÜR KOMMENTARE (10 STÜCK) -->
+        @if (Model.GesamtKommentarSeiten > 1)
+        {
+            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                @if (Model.KommentarSeite > 1)
+                {
+                    <a href="/Blog/Admin?AktuelleSeite=@Model.AktuelleSeite&KommentarSeite=@(Model.KommentarSeite - 1)&FilterAutor=@Model.FilterAutor&FilterDatum=@Model.FilterDatum" class="scroll-to-top" style="transform: none; padding: 0.3rem 0.7rem; font-size: 0.85rem;">&larr; Zurück</a>
+                }
+                <span style="color: var(--text-color); font-size: 0.9rem; font-weight: 600;">Kommentar-Seite @Model.KommentarSeite von @Model.GesamtKommentarSeiten</span>
+                @if (Model.KommentarSeite < Model.GesamtKommentarSeiten)
+                {
+                    <a href="/Blog/Admin?AktuelleSeite=@Model.AktuelleSeite&KommentarSeite=@(Model.KommentarSeite + 1)&FilterAutor=@Model.FilterAutor&FilterDatum=@Model.FilterDatum" class="scroll-to-top" style="transform: none; padding: 0.3rem 0.7rem; font-size: 0.85rem;">Weiter &rarr;</a>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- SEKTION 3: KOMMENTAR DIREKT ALS ADMIN HINZUFÜGEN -->
+    <div class="section-padding">
+        <h2>Kommentar direkt im Namen des Labors verfassen</h2>
+        <p style="font-size: 0.9rem; margin-bottom: 1.5rem; opacity: 0.8;">Wählen Sie einen Beitrag aus, um sofort einen freigegebenen Kommentar hinzuzufügen.</p>
+
+        <form method="post" asp-page-handler="AddComment" class="minimal-form" style="max-width: 600px;">
+            <div class="form-group">
+                <label>Zugehöriger Fachbeitrag:</label>
+                <select name="blogPostId" required style="width: 100%; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--bg-white); color: var(--text-color); font-family: inherit; font-size: 1rem;">
+                    <option value="">-- Bitte Beitrag auswählen --</option>
+                    @foreach (var post in Model.AlleBeiträge)
+                    {
+                        <option value="@post.Id">@post.Titel (@post.Autor)</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NeuerAdminKommentar.Pseudonym">Admin-Pseudonym / Name:</label>
+                <input asp-for="NeuerAdminKommentar.Pseudonym" value="Projekt-Leitung" required />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NeuerAdminKommentar.Text">Kommentar-Text:</label>
+                <textarea asp-for="NeuerAdminKommentar.Text" rows="3" placeholder="Offizielles Labor-Statement schreiben..." required style="resize: vertical;"></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" style="background-color: #10b981;">Kommentar sofort veröffentlichen</button>
+        </form>
+    </div>
+
+</div>
+

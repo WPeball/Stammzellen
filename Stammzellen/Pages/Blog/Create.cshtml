@@ -1,0 +1,42 @@
+﻿@page
+@model Stammzellen.Pages.Blog.CreateModel
+@{
+    ViewData["Title"] = "Neuen Blogbeitrag verfassen";
+}
+
+<div class="blog-header">
+    <h1>Neuen wissenschaftlichen Beitrag verfassen</h1>
+    <p>Veröffentlichen Sie aktuelle Erkenntnisse oder Ankündigungen für das Stammzellen-Projekt.</p>
+</div>
+
+<div class="main-content">
+    <div class="section-padding contact-form" style="max-width: 800px; margin: 0 auto;">
+        <h2>Beitrag erstellen</h2>
+
+        <form method="post" class="minimal-form">
+            <div asp-validation-summary="ModelOnly" class="alert-info" style="color: red; border-left-color: red;"></div>
+
+            <div class="form-group">
+                <label asp-for="NeuerPost.Titel">Titel des Beitrags:</label>
+                <input asp-for="NeuerPost.Titel" placeholder="z. B. Neue Erkenntnisse zur Zelldifferenzierung..." required />
+                <span asp-validation-for="NeuerPost.Titel" style="color: red; font-size: 0.85rem;"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NeuerPost.Autor">Autor / Verfasser des Artikels:</label>
+                <input asp-for="NeuerPost.Autor" placeholder="z. B. Dr. Max Mustermann" required />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="NeuerPost.Inhalt">Inhalt / Text:</label>
+                <textarea asp-for="NeuerPost.Inhalt" rows="10" placeholder="Schreiben Sie hier Ihren wissenschaftlichen Artikel..." required style="resize: vertical;"></textarea>
+                <span asp-validation-for="NeuerPost.Inhalt" style="color: red; font-size: 0.85rem;"></span>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button type="submit" class="btn-submit">Beitrag veröffentlichen</button>
+                <a href="/Blog/Index" class="btn-reset" style="line-height: 2.3; text-align: center;">Abbrechen</a>
+            </div>
+        </form>
+    </div>
+</div>

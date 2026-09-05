@@ -1,15 +1,39 @@
 /* ==========================================================================
-   1. MODERNE CSS VARIABLEN & BASICS
+   1. MODERNE CSS VARIABLEN & BASICS (HELL UND DUNKEL)
    ========================================================================== */
 :root {
-    --primary-color: #1e3a8a; /* Dunkelblau (Seriös, Wissenschaftlich) */
+    /* Helles Farbschema (Standard) */
+    --primary-color: #1e3a8a; /* Dunkelblau */
     --secondary-color: #3b82f6; /* Akzentblau */
-    --text-color: #1f2937; /* Fast Schwarz für gute Lesbarkeit */
-    --bg-light: #f1f5f9; /* Ein klares, helles Grau für den Haupt-Hintergrund */
+    --text-color: #1f2937; /* Fast Schwarz */
+    --bg-light: #f1f5f9; /* Helles Hintergrundgrau */
     --bg-white: #ffffff;
-    --border-color: #cbd5e1; /* Gut sichtbare Rahmenfarbe für Struktur */
-    --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --border-color: #cbd5e1;
+    --card-bg-ueberuns: #f8fafc;
+    --card-bg-kontakt: #f0f7ff;
+    --card-bg-impressum: #fafafa;
+    --card-bg-dsgvo: #f4fbf7;
+    /* NEU: Der klassische blaue Forschungs-Verlauf für den hellen Modus */
+    --hero-gradient: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
+    --font-stack: Arial, Helvetica, sans-serif;
 }
+
+/* Dunkles Farbschema (wird per JavaScript aktiviert) */
+[data-theme="dark"] {
+    --primary-color: #60a5fa;
+    --secondary-color: #3b82f6;
+    --text-color: #f1f5f9;
+    --bg-light: #0f172a;
+    --bg-white: #1e293b;
+    --border-color: #334155;
+    --card-bg-ueberuns: #1e293b;
+    --card-bg-kontakt: #1e293b;
+    --card-bg-impressum: #1e293b;
+    --card-bg-dsgvo: #1e293b;
+    /* NEU: Ein eigener, edler dunkler Verlauf für die Hero-Box im Dark Mode */
+    --hero-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
 
 * {
     box-sizing: border-box;
@@ -22,10 +46,11 @@ body {
     color: var(--text-color);
     background-color: var(--bg-light);
     line-height: 1.6;
-    /* NEU: Zwingt den Footer nach unten */
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Mindestens 100% der Bildschirmlänge */
+    min-height: 100vh;
+    /* NEU: Verhindert, dass Inhalte unter der fixierten Navbar verschwinden */
+    padding-top: 70px;
 }
 
 /* ==========================================================================
@@ -34,8 +59,11 @@ body {
 .navbar {
     background-color: var(--bg-white);
     border-bottom: 1px solid var(--border-color);
-    position: sticky;
+    /* NEU: Hält das Menü beim Scrollen bombenfest ganz oben */
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
 }
 
@@ -92,6 +120,11 @@ body {
         transition: all 0.3s ease;
     }
 
+    /* Beispiel für CSS, wenn das Menü aktiv ist */
+    .nav-toggle.active .bar {
+        background-color: var(--secondary-color); /* Ändert z.B. die Farbe der Striche im X-Zustand */
+    }
+
 /* ==========================================================================
    3. SEKTIONEN-LAYOUT (ABGERUNDETE ECKEN & HINTERGRÜNDE)
    ========================================================================== */
@@ -116,19 +149,19 @@ body {
 
 /* Individuelle, dezente Hintergrundfarben zur visuellen Trennung */
 #ueber-uns {
-    background-color: #f8fafc; /* Sehr sauberes, kühles Hellgrau */
+    background-color: var(--card-bg-ueberuns);
 }
 
 #kontakt {
-    background-color: #f0f7ff; /* Zarter, medizinisch-frischer Blaustich */
+    background-color: var(--card-bg-kontakt);
 }
 
 #impressum {
-    background-color: #fafafa; /* Minimal getöntes Warmgrau */
+    background-color: var(--card-bg-impressum);
 }
 
 #dsgvo {
-    background-color: #f4fbf7; /* Ganz sanfter Grünton, biologisch-organisch */
+    background-color: var(--card-bg-dsgvo);
 }
 
 .text-section h2, .legal-section h2 {
@@ -137,29 +170,56 @@ body {
     margin-bottom: 1.5rem;
 }
 
+/* Ensure paragraph text adapts to the light/dark mode variables */
+p {
+    color: var(--text-color);
+    transition: color 0.3s ease; /* Smooth fade when switching modes */
+}
+
+
 /* ==========================================================================
    4. HERO / WILLKOMMENS-BEREICH
    ========================================================================== */
+/* --- HERO SECTION --- */
+/* ==========================================================================
+   4. HERO / WILLKOMMENS-BEREICH (MIT MODERNEM BIO-FOTO)
+   ========================================================================== */
+/* --- HERO SECTION --- */
+/* ==========================================================================
+   4. HERO / WILLKOMMENS-BEREICH (MIT MODERNEM BIO-FOTO)
+   ========================================================================== */
+/* --- HERO SECTION --- */
 .hero-section {
-    background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
-    color: var(--bg-white);
+    /* Pfad exakt auf deinen Ordner und Dateinamen angepasst */
+    background-image: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.6)), url('/img/Stammzellen1.jpg');
+    background-size: cover; /* Streckt das Foto perfekt über die gesamte Box */
+    background-position: center; /* Zentriert das Bild, damit der Fokus erhalten bleibt */
+    background-repeat: no-repeat;
+    color: #ffffff !important; /* Erzwingt IMMER weißes Text-Design auf dem Foto */
     text-align: center;
     padding: 6rem 2rem;
     border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
     .hero-section h1 {
         font-size: 3rem;
         margin-bottom: 1rem;
         font-weight: 800;
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Macht den Text auf dem Foto perfekt lesbar */
     }
 
     .hero-section .subtitle {
         font-size: 1.25rem;
         max-width: 800px;
         margin: 0 auto 2rem auto;
-        opacity: 0.9;
+        color: #f1f5f9 !important;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     }
+
+
+
 
 /* ==========================================================================
    5. RASTER, BUTTONS & FORMULARE
@@ -254,11 +314,37 @@ body {
 .footer {
     background-color: var(--bg-white);
     border-top: 1px solid var(--border-color);
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     margin-top: 4rem;
-    text-align: center;
-    font-size: 0.9rem;
 }
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between; /* Schiebt Text nach links und Pfeil nach rechts */
+    align-items: center;
+}
+
+/* NEU: Styling für den Top-Pfeil */
+.scroll-to-top {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: var(--bg-white);
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.scroll-to-top:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
 
 /* ==========================================================================
    7. MOBIL-ANSICHT (RESPONSIVE CONFIG)
@@ -285,4 +371,181 @@ body {
         .nav-menu.active {
             display: flex;
         }
+}
+
+/* ==========================================================================
+   8. BLOG, FILTER & KOMMENTARE (DARK MODE OPTIMIERT)
+   ========================================================================== */
+.blog-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+/* NUTZT JETZT DIE VARIABLEN: Passt sich automatisch an Hell/Dunkel an */
+.filter-section {
+    background-color: var(--bg-white) !important;
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-end;
+    margin-top: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+    .filter-group input {
+        padding: 0.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background-color: var(--bg-light); /* Hintergrund für Eingabefelder im Dark Mode */
+        color: var(--text-color); /* Textfarbe für Eingabefelder */
+    }
+
+.filter-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-reset {
+    display: inline-block;
+    padding: 0.6rem 1.5rem;
+    background-color: var(--border-color); /* Passt sich farblich an */
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.alert-info {
+    background-color: rgba(59, 130, 246, 0.1); /* Transparenter Blaustich */
+    border-left: 4px solid var(--secondary-color);
+    padding: 1rem;
+    border-radius: 4px;
+    color: var(--primary-color);
+}
+
+/* NUTZT JETZT DIE VARIABLEN */
+.blog-post-card {
+    background-color: var(--bg-white);
+    color: var(--text-color);
+}
+
+.post-meta {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.date-badge {
+    font-size: 0.85rem;
+    color: var(--secondary-color); /* Bessere Lesbarkeit im Dunkeln */
+}
+
+.post-body {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    white-space: pre-line;
+    color: var(--text-color);
+}
+
+/* --- KOMMENTAR BOXEN --- */
+.comments-area {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed var(--border-color);
+}
+
+/* NUTZT JETZT DIE VARIABLEN */
+.comment-box {
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.comment-meta {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.comment-text {
+    font-size: 0.95rem;
+}
+
+/* NUTZT JETZT DIE VARIABLEN */
+.comment-form-container {
+    margin-top: 2rem;
+    background-color: var(--bg-light);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.minimal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+    .form-group-inline input, .minimal-form textarea {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        font-family: inherit;
+        background-color: var(--bg-white); /* Eingabefelder heben sich vom Formularhintergrund ab */
+        color: var(--text-color);
+    }
+
+.btn-submit-small {
+    background-color: var(--secondary-color);
+    color: var(--bg-white);
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    align-self: flex-start;
+}
+
+/* --- DARK MODE BUTTON --- */
+.footer-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark-mode-btn {
+    background-color: #e2e8f0;
+    color: #1f2937;
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+[data-theme="dark"] .dark-mode-btn {
+    background-color: #334155;
+    color: #f1f5f9;
+}
+
+.dark-mode-btn:hover {
+    filter: brightness(0.9);
 }

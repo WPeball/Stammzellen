@@ -1,0 +1,125 @@
+﻿@page
+@model Stammzellen.Pages.Blog.IndexModel
+@{
+    ViewData["Title"] = "Forschungs-Blog";
+}
+
+<div class="blog-header">
+    <h1>Stammzellen Forschungs-Blog</h1>
+    <p>Aktuelle Einblicke und wissenschaftliche Diskussionen aus unserem Labor</p>
+</div>
+
+<!-- SYSTEM-HINWEIS (Erfolgsmeldung nach dem Abschicken) -->
+@if (TempData["Message"] != null)
+{
+    <div class="alert-info" style="max-width: 1200px; margin: 1rem auto; background-color: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--secondary-color); padding: 1rem; border-radius: 4px;">
+        <p><strong>Hinweis:</strong> @TempData["Message"]</p>
+    </div>
+}
+
+<div class="main-content">
+    
+    <!-- 1. ERWEITERTE FILTER-LEISTE -->
+    <div class="section-padding filter-section" style="margin-bottom: 2rem;">
+        <h2>Beiträge filtern</h2>
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <label for="FilterAutor">Nach Autor suchen:</label>
+                <input type="text" asp-for="FilterAutor" placeholder="Name des Forschers..." />
+            </div>
+            <div class="filter-group">
+                <label for="FilterPseudonym">Nach Kommentator:</label>
+                <input type="text" asp-for="FilterPseudonym" placeholder="Pseudonym..." />
+            </div>
+            <div class="filter-group">
+                <label for="FilterDatum">Veröffentlichungsdatum:</label>
+                <input type="date" asp-for="FilterDatum" />
+            </div>
+            <div class="filter-buttons">
+                <button type="submit" class="btn-submit" style="padding: 0.6rem 1.5rem;">Suchen</button>
+                <a href="/Blog/Index" class="btn-reset">Zurücksetzen</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- 2. BLOG-POSTS ANZEIGE START -->
+    @if (!Model.BlogPosts.Any())
+    {
+        <div class="alert-info">
+            <p>Es wurden keine Blog-Beiträge gefunden.</p>
+        </div>
+    }
+    else
+    {
+        @foreach (var post in Model.BlogPosts)
+        {
+            <article class="section-padding blog-post-card" style="margin-bottom: 2.5rem;">
+                <h2>@post.Titel</h2>
+                <div class="post-meta" style="display: flex; gap: 1.5rem; opacity: 0.8; font-size: 0.9rem;">
+                    <span class="date-badge">📅 @post.ErstelltAm.ToString("dd.MM.yyyy HH:mm") Uhr</span>
+                    <span style="color: var(--text-color);">👤 Autor: <strong>@post.Autor</strong></span>
+                </div>
+                
+                <div class="post-body" style="margin-top: 1rem; margin-bottom: 2rem;">
+                    @post.Inhalt
+                </div>
+
+                <!-- KOMMENTAR-ZONE -->
+                <div class="comments-area">
+                    <h3>Diskussion (@post.Kommentare.Count Kommentare)</h3>
+
+                    <!-- Scroll-Box, wenn mehr als 3 Kommentare vorhanden sind -->
+                    <div style="max-height: 260px; overflow-y: auto; padding-right: 0.5rem; margin-top: 1rem;">
+                        @foreach (var kommentar in post.Kommentare)
+                        {
+                            <div class="comment-box" style="margin-bottom: 0.75rem;">
+                                <div class="comment-meta">
+                                    <strong>@kommentar.Pseudonym</strong> &bull; @kommentar.ErstelltAm.ToString("dd.MM.yyyy HH:mm")
+                                </div>
+                                <div class="comment-text">
+                                    @kommentar.Text
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- FORMULAR FÜR NEUE KOMMENTARE -->
+                    <div class="comment-form-container" style="margin-top: 1.5rem;">
+                        <h4>Einen Kommentar hinterlassen</h4>
+                        <form method="post" asp-page-handler="Comment" asp-route-blogPostId="@post.Id" class="minimal-form">
+                            <div class="form-group">
+                                <label>Dein Pseudonym:</label>
+                                <input asp-for="NeuerKommentar.Pseudonym" required placeholder="z. B. Dr. Müller" />
+                            </div>
+                            <div class="form-group">
+                                <label>Dein Kommentar:</label>
+                                <textarea asp-for="NeuerKommentar.Text" required rows="3" placeholder="Schreibe deine Meinung..."></textarea>
+                            </div>
+                            <button type="submit" class="btn-submit-small">Abschicken</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Die Admin-Buttons wurden hier wunschgemäß restlos entfernt -->
+            </article>
+        }
+
+        <!-- 3. BLÄTTER-NAVIGATION (PAGINATION) -->
+        @if (Model.GesamtSeiten > 1)
+        {
+            <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem; padding: 1rem;">
+                @if (Model.AktuelleSeite > 1)
+                {
+                    <a href="/Blog/Index?AktuelleSeite=@(Model.AktuelleSeite - 1)&FilterAutor=@Model.FilterAutor&FilterPseudonym=@Model.FilterPseudonym&FilterDatum=@Model.FilterDatum" class="scroll-to-top" style="transform: none;">&larr; Vorherige</a>
+                }
+
+                <span style="color: var(--text-color); font-weight: 600;">Seite @Model.AktuelleSeite von @Model.GesamtSeiten</span>
+
+                @if (Model.AktuelleSeite < Model.GesamtSeiten)
+                {
+                    <a href="/Blog/Index?AktuelleSeite=@(Model.AktuelleSeite + 1)&FilterAutor=@Model.FilterAutor&FilterPseudonym=@Model.FilterPseudonym&FilterDatum=@Model.FilterDatum" class="scroll-to-top" style="transform: none;">Nächste &rarr;</a>
+                }
+            </div>
+        }
+    }
+</div>

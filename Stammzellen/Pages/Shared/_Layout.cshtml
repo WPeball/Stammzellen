@@ -11,32 +11,51 @@
     <header>
         <nav class="navbar">
             <div class="nav-container">
-                <a class="nav-logo" href="#home">Stammzellen Projekt</a>
+                <!-- Dein Logo/Titel -->
+                <a class="nav-logo" href="/Index#home">Stammzellen Projekt</a>
 
+                <!-- Der korrekte Hamburgermenü-Button für dein JavaScript -->
                 <button class="nav-toggle" id="js-nav-toggle" aria-label="Menü öffnen">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
                 </button>
 
+                <!-- Die Menüleiste mit allen Links inklusive des neuen Admin-Logins -->
                 <ul class="nav-menu" id="js-nav-menu">
-                    <li><a class="nav-link" href="#home">Home</a></li>
-                    <li><a class="nav-link" href="#ueber-uns">Über uns</a></li>
-                    <li><a class="nav-link" href="#kontakt">Kontakt</a></li>
-                    <li><a class="nav-link" href="#impressum">Impressum</a></li>
-                    <li><a class="nav-link" href="#dsgvo">DSGVO</a></li>
+                    <li><a class="nav-link" href="/Index#home">Home</a></li>
+                    <li><a class="nav-link" href="/Index#ueber-uns">Über uns</a></li>
+                    <li><a class="nav-link" href="/Dashboard">Dashboard</a></li>
+                    <li><a class="nav-link" href="/Blog/Index">Blog</a></li>
+                    <li><a class="nav-link" href="/Index#kontakt">Kontakt</a></li>
+
+                    <!-- NEU: Der geschützte Admin-Aufruf für Blog & Kommentare -->
+                    <li><a class="nav-link" href="/Blog/Login" style="border: 1px solid var(--primary-color); padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: 600;">🔒 Admin</a></li>
                 </ul>
             </div>
         </nav>
     </header>
+
 
     <main class="main-content">
         @RenderBody()
     </main>
 
     <footer class="footer">
-        <p>&copy; @DateTime.Now.Year - Stammzellen - Wissenschaft & Zukunft</p>
+        <div class="footer-content">
+            <p>&copy; @DateTime.Now.Year - Stammzellen - Wissenschaft & Zukunft</p>
+
+            <!-- NEU: Steuerungs-Bereich für Schalter und Pfeil -->
+            <div class="footer-controls">
+                <button id="js-dark-mode-toggle" class="dark-mode-btn" aria-label="Farbschema wechseln">
+                    🌓 Modus wechseln
+                </button>
+                <a href="#home" class="scroll-to-top" title="Nach oben scrollen">↑ Nach oben</a>
+            </div>
+        </div>
     </footer>
+
+
 
     <script src="/js/site.js"></script>
 </body>

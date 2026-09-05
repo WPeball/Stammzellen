@@ -36,15 +36,15 @@
     <form class="contact-form" method="post">
         <div class="form-group">
             <label for="name">Name / Institution</label>
-            <input type="text" id="name" name="name" required placeholder="Ihr Name">
+            <input type="text" id="name" asp-for="Name" name="name" required placeholder="Ihr Name">
         </div>
         <div class="form-group">
             <label for="email">E-Mail-Adresse</label>
-            <input type="email" id="email" name="email" required placeholder="ihre.mail@beispiel.de">
+            <input type="email" id="email" asp-for="Email" name="email" required placeholder="ihre.mail@beispiel.de">
         </div>
         <div class="form-group">
             <label for="nachricht">Ihre Nachricht</label>
-            <textarea id="nachricht" name="nachricht" rows="5" required placeholder="Wie können wir Ihnen helfen?"></textarea>
+            <textarea id="nachricht" asp-for="Nachricht" name="nachricht" rows="5" required placeholder="Wie können wir Ihnen helfen?"></textarea>
         </div>
         <button type="submit" class="btn-submit">Nachricht senden</button>
     </form>
@@ -56,7 +56,7 @@
     <p><strong>Angaben gemäß § 5 TMG:</strong></p>
     <p>Stammzellen Forschungsprojekt e.V.<br>Musterstraße 42<br>12345 Musterstadt</p>
     <p><strong>Vertreten durch:</strong><br>Dr. med. Max Mustermann</p>
-    <p><strong>Kontakt:</strong><br>Telefon: +49 (0) 123 456789<br>E-Mail: info@stammzellen-projekt.de</p>
+    <p><strong>Kontakt:</strong><br>Telefon: +43 (0) 123 456789<br>E-Mail: office@multiuser.eu</p>
 </section>
 
 <!-- 5. DSGVO SEKTION -->
